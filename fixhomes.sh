@@ -138,25 +138,25 @@ function removeHome {
 		#Decide whether or not to delete the home folder
 		if [ "$answer" == "yes" ]; then
 			smoothOut "Backing up files..."
-				curdate=`date "+%Y-%m-%d"`
-				checkbackup=`ls /Users | grep "$i".bak."$curdate"`
-				if [ -z "$checkbackup" ]; then
-					mv /Users/"$i" /Users/"$i".bak."$curdate"
-				else
-					smoothOut "Backup from today already found, adding a zero to the name..."
-					checkbackup=`ls /Users | grep "$i".bak."$curdate".0`
-					if [ -z "$checkbackup" ]; then
-						smoothOut "Backup with 0 at the end already found, deleting..."
-						rm -rf /Users/"$i".bak."$curdate".0
-					fi
-					mv /Users/"$i".bak."$curdate" /Users/"$i".bak."$curdate".0
-					mv /Users/"$i" /Users/"$i".bak."$curdate"
-				fi
-				smoothOut "Backup complete. Moved to /Users/$i.bak.$curdate"
+			curdate=`date "+%Y-%m-%d"`
+			checkbackup=`ls /Users | grep "$i".bak."$curdate"`
+			if [ -z "$checkbackup" ]; then
+				mv /Users/"$i" /Users/"$i".bak."$curdate"
 			else
-				smoothOut "Deleting the home folder..."
-				rm -rf /Users/"$i"
-				smoothOut "Delete complete. The user's folder has been deleted."
+				smoothOut "Backup from today already found, adding a zero to the name..."
+				checkbackup=`ls /Users | grep "$i".bak."$curdate".0`
+				if [ -z "$checkbackup" ]; then
+					smoothOut "Backup with 0 at the end already found, deleting..."
+					rm -rf /Users/"$i".bak."$curdate".0
+				fi
+				mv /Users/"$i".bak."$curdate" /Users/"$i".bak."$curdate".0
+				mv /Users/"$i" /Users/"$i".bak."$curdate"
+			fi
+			smoothOut "Backup complete. Moved to /Users/$i.bak.$curdate"
+		else
+			smoothOut "Deleting the home folder..."
+			rm -rf /Users/"$i"
+			smoothOut "Delete complete. The user's folder has been deleted."
 		fi
 	else
 		smoothOut "Everything is finished, now exiting the machine..."

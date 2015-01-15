@@ -57,7 +57,7 @@ function removeHome {
 	for i in "${users[@]}"
 	do
 		#Make sure nothing important is deleted.
-		if [[ "$i" != "student" ]] && [[ "$i" != "teacher" ]] && [[ "$i" != "admin" ]] && [[ "$i" != "radmind" ]] && [[ "$i" != "Shared" ]] && [[ "i" != ".localized" ]]; then
+		if [ "$i" != "student" ] && [ "$i" != "teacher" ] && [ "$i" != "admin" ] && [ "$i" != "radmind" ] && [ "$i" != "Shared" ] && [ "$i" != ".localized" ]; then
 			#Create a variable to be used as the test if the files are there
 			found=`ls -a /Users/"$i" | grep "$hidden"`
 			if [ "$found" == "$hidden" ]; then
@@ -65,7 +65,7 @@ function removeHome {
 				answer="xyz"
 				smoothOut "\tThe hidden file has been found!\n"\
 "This means that the home is corrupt and should be deleted.\n"\
-"Delete the user $i on $ipBase.$x? ('yes' or 'no')"
+"Delete the user $i? ('yes' or 'no')"
 				read answer
 				while [ "$answer" != "yes" ] && [ "$answer" != "no" ]; do
 					smoothOut "Please choose only 'yes' or 'no' as the answer."
@@ -87,6 +87,7 @@ function removeHome {
 						curdate=`date "+%Y-%m-%d"`
 						checkbackup=`ls /Users | grep "$i".bak."$curdate"`
 						if [ -z "$checkbackup" ]; then
+							rm /Users/"$i"/"$hidden"
 							mv /Users/"$i" /Users/"$i".bak."$curdate"
 						else
 							smoothOut "Backup from today already found, adding a zero to the name..."
@@ -95,6 +96,7 @@ function removeHome {
 								smoothOut "Backup with 0 at the end already found, deleting..."
 								rm -rf /Users/"$i".bak."$curdate".0
 							fi
+							rm /Users/"$i"/"$hidden"
 							mv /Users/"$i".bak."$curdate" /Users/"$i".bak."$curdate".0
 							mv /Users/"$i" /Users/"$i".bak."$curdate"
 						fi
@@ -108,7 +110,7 @@ function removeHome {
 					smoothOut "Ingnoring this user's folder...\n"
 				fi
 			else
-				smoothOut "The hidden file '$hidden' has not been found in user folder '$i'.\n\tChecking different folder..."
+				smoothOut "The hidden file '$hidden' has not been found in user folder '$i'.\nChecking different folder..."
 			fi
 		fi
 	done
@@ -126,7 +128,8 @@ function removeHome {
 		smoothOut "Please enter the user name:"
 		read usr
 		#Remove the user from the system
-		dscl . -delete /Users/"$i"
+		smoothOut "Removing user "
+		dscl . -delete /Users/"$usr"
 		#Ask what to do about their files
 		smoothOut "Would you like to backup their files? If not, they will be deleted."
 		read answer
@@ -138,23 +141,23 @@ function removeHome {
 		if [ "$answer" == "yes" ]; then
 			smoothOut "Backing up files..."
 			curdate=`date "+%Y-%m-%d"`
-			checkbackup=`ls /Users | grep "$i".bak."$curdate"`
+			checkbackup=`ls /Users | grep "$usr".bak."$curdate"`
 			if [ -z "$checkbackup" ]; then
-				mv /Users/"$i" /Users/"$i".bak."$curdate"
+				mv /Users/"$i" /Users/"$usr".bak."$curdate"
 			else
 				smoothOut "Backup from today already found, adding a zero to the name..."
-				checkbackup=`ls /Users | grep "$i".bak."$curdate".0`
+				checkbackup=`ls /Users | grep "$usr".bak."$curdate".0`
 				if [ -z "$checkbackup" ]; then
 					smoothOut "Backup with 0 at the end already found, deleting..."
-					rm -rf /Users/"$i".bak."$curdate".0
+					rm -rf /Users/"$usr".bak."$curdate".0
 				fi
-				mv /Users/"$i".bak."$curdate" /Users/"$i".bak."$curdate".0
-				mv /Users/"$i" /Users/"$i".bak."$curdate"
+				mv /Users/"$usr".bak."$curdate" /Users/"$usr".bak."$curdate".0
+				mv /Users/"$usr" /Users/"$usr".bak."$curdate"
 			fi
-			smoothOut "Backup complete. Moved to /Users/$i.bak.$curdate"
+			smoothOut "Backup complete. Moved to /Users/$usr.bak.$curdate"
 		else
 			smoothOut "Deleting the home folder..."
-			rm -rf /Users/"$i"
+			rm -rf /Users/"$usr"
 			smoothOut "Delete complete. The user's folder has been deleted."
 		fi
 	else

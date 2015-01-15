@@ -79,14 +79,27 @@ function removeHome {
 					smoothOut "Would you like to backup their files? If not, they will be deleted."
 					read answer
 					while [ "$answer" != "yes" ] && [ "$answer" != "no" ]; do
-            smoothOut "Please choose only 'yes' or 'no' as the answer."
-            read answer
+        					smoothOut "Please choose only 'yes' or 'no' as the answer."
+        					read answer
 					done
 					#Decide whether or not to delete the home folder
 					if [ "$answer" == "yes" ]; then
 						smoothOut "Backing up files..."
-						mv /Users/"$i" /Users/"$i".bak
-						smoothOut "Backup complete. Moved to /Users/$i.bak"
+						curdate=`date "+%Y-%m-%d"`
+						checkbackup=`ls /Users | grep "$i".bak."$curdate"`
+						if [ -z "$checkbackup" ]; then
+							mv /Users/"$i" /Users/"$i".bak."$curdate"
+						else
+							smoothOut "Backup from today already found, adding a zero to the name..."
+							checkbackup=`ls /Users | grep "$i".bak."$curdate".0`
+							if [ -z "$checkbackup" ]; then
+								smoothOut "Backup with 0 at the end already found, deleting..."
+								rm -rf /Users/"$i".bak."$curdate".0
+							fi
+							mv /Users/"$i".bak."$curdate" /Users/"$i".bak."$curdate".0
+							mv /Users/"$i" /Users/"$i".bak."$curdate"
+						fi
+						smoothOut "Backup complete. Moved to /Users/$i.bak.$curdate"
 					else
 						smoothOut "Deleting the home folder..."
 						rm -rf /Users/"$i"
@@ -125,8 +138,21 @@ function removeHome {
 		#Decide whether or not to delete the home folder
 		if [ "$answer" == "yes" ]; then
 			smoothOut "Backing up files..."
-			mv /Users/"$i" /Users/"$i".bak
-			smoothOut "Backup complete. Moved to /Users/$i.bak"
+			curdate=`date "+%Y-%m-%d"`
+			checkbackup=`ls /Users | grep "$i".bak."$curdate"`
+			if [ -z "$checkbackup" ]; then
+				mv /Users/"$i" /Users/"$i".bak."$curdate"
+			else
+				smoothOut "Backup from today already found, adding a zero to the name..."
+				checkbackup=`ls /Users | grep "$i".bak."$curdate".0`
+				if [ -z "$checkbackup" ]; then
+					smoothOut "Backup with 0 at the end already found, deleting..."
+					rm -rf /Users/"$i".bak."$curdate".0
+				fi
+				mv /Users/"$i".bak."$curdate" /Users/"$i".bak."$curdate".0
+				mv /Users/"$i" /Users/"$i".bak."$curdate"
+			fi
+			smoothOut "Backup complete. Moved to /Users/$i.bak.$curdate"
 		else
 			smoothOut "Deleting the home folder..."
 			rm -rf /Users/"$i"

@@ -166,7 +166,7 @@ function removeHome {
 for x in `seq $begin $ending`;
 do
 	smoothOut "Now connecting to $ipBase.$x, please wait..."
-	ssh -t root@$ipBase.$x "$(typeset -f); hidden='.badhome'; removeHome"
+	ssh -t -o ConnectTimeout=7 root@$ipBase.$x "$(typeset -f); hidden='.badhome'; removeHome"
 	smoothOut "\n"
 done
 

@@ -58,7 +58,6 @@ function removeHome {
 	do
 		#Make sure nothing important is deleted.
 		if [[ "$i" != "student" ]] && [[ "$i" != "teacher" ]] && [[ "$i" != "admin" ]] && [[ "$i" != "radmind" ]] && [[ "$i" != "Shared" ]] && [[ "i" != ".localized" ]]; then
-			smoothOut "$i"
 			#Create a variable to be used as the test if the files are there
 			found=`ls -a /Users/"$i" | grep "$hidden"`
 			if [ "$found" == "$hidden" ]; then

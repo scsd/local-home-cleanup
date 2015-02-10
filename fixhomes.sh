@@ -25,23 +25,47 @@ function smoothOut {
 	fi
 }
 
-
 #This will be the help explination for when we forget
-
-if [ "$1" == "-h" ] || [ "$1" == "--help" ] || [ -z "$1" ]; then
-	smoothOut "Useage:"
-	smoothOut "\tfixhomes [ip address]\n\nThe ip address can be in the standard form of 10.81.xxx.xxx or in\n"\
+print_help ()
+{
+smoothOut "USAGE:\n"\
+"\tfixhomes [options] [ip address]\n"\
+"OPTIONS:\n"\
+"\t-h\tOutput this help log. '--help' will also work.\n"\
+"\n"\
+"The ip address can be in the standard form of 10.81.xxx.xxx or in\n"\
 "the form of 10.81.xxx.xxx-xxx, meaning that it will start from the\n"\
 "first ip address and loop through the last set of numbers until it\n"\
 "reaches the set of numbers after the dash(-)."
+exit 0
+}
 
-	exit 0
+
+#Loop through all of the given options until a blank one is found and set each otion as such.
+optnum=1
+while [ "${!optnum}" != "" ]
+do
+	case "${!optnum}" in
+	"-h")
+		print_help
+		;;
+	"--help")
+		print_help
+		;;
+	esac
+	optnum=$(($optnum+1))
+done
+
+#Check if ANY options were given. If not, output the help diolog.
+If [ "$optnum" == "1" ]; then
+	print_help
 fi
 
 #Set the ip address and the ranges
-ipBase=`echo "$1" | cut -d'-' -f 1 | cut -d'.' -f 1-3`
-begin=`echo "$1" | cut -d'-' -f 1 | cut -d'.' -f 4`
-ending=`echo "$1" | cut -d'-' -f 2`
+optnum=$(($optnum-1))	#Get the last non-blank option (which should be the ip address)
+ipBase=`echo "${!optnum}" | cut -d'-' -f 1 | cut -d'.' -f 1-3`
+begin=`echo "${!optnum}" | cut -d'-' -f 1 | cut -d'.' -f 4`
+ending=`echo "${!optnum}" | cut -d'-' -f 2`
 
 #Check if there is a range given. This needs to be done because cut will grab the whole address.
 rangeCheck="$ipBase.$begin"

@@ -184,16 +184,51 @@ function removeHome {
 			rm -rf /Users/"$usr"
 			smoothOut "Delete complete. The user's folder has been deleted."
 		fi
+	fi
+	#Reboot the computer after everything is finished.
+	echo "Would you like to reboot the computer?"
+	read answer
+	while [ "$answer" != "yes" ] && [ "$answer" != "no" ]; do
+		smoothOut "Please choose only 'yes' or 'no' as the answer."
+		read answer
+	done
+	if [ $answer == "yes" ]; then
+		echo "Computer is now going to reboot."
+		reboot
 	else
 		smoothOut "Everything is finished, now exiting the machine..."
 	fi
 }
 
+#A function to check if the user is logged out or not. Will display the currently logged in
+#users, and will determine if the script should procede or not.
+function checklogin()
+{
+	echo "Checking who is logged into the computer..."
+	#Get an array of those who are logged in
+	curUsers=`who | awk '{print $1}'`
+	#Check for any loged in users that are not root/admin
+	for name in ${curUsers[@]}
+	do
+		if [ $name != "root" ] && [ $name != "admin" ]; then
+			echo "$name is currently logged in. Are you sure you want to continue?"
+			read answer
+			while [ "$answer" != "yes" ] && [ "$answer" != "no" ]; do
+				smoothOut "Please choose only 'yes' or 'no' as the answer."
+				read answer
+			done
+			if [[ $answer == "yes" ]]; then
+				exit 1
+			fi
+		fi
+			
+}
+
 #Create a while loop to go through each ip that was specified. Use 'x' as the looping variable!
-for x in `seq $begin $ending`;
+for (( x=$begin;x<=$ending;x++ ))
 do
 	smoothOut "Now connecting to $ipBase.$x, please wait..."
-	ssh -t -o ConnectTimeout=7 root@$ipBase.$x "$(typeset -f); hidden='.badhome'; removeHome"
+	ssh -t -o ConnectTimeout=7 root@$ipBase.$x "$(typeset -f); hidden='.badhome'; checklogin; removeHome"
 	smoothOut "\n"
 done
 

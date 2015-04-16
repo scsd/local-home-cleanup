@@ -221,7 +221,7 @@ function checklogin()
 				exit 1
 			fi
 		fi
-			
+	done	
 }
 
 #Create a while loop to go through each ip that was specified. Use 'x' as the looping variable!

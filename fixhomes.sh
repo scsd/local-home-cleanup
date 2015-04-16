@@ -57,7 +57,7 @@ do
 done
 
 #Check if ANY options were given. If not, output the help diolog.
-If [ "$optnum" == "1" ]; then
+if [ "$optnum" == "1" ]; then
 	print_help
 fi
 

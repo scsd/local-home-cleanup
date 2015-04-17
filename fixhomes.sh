@@ -87,7 +87,7 @@ function removeHome {
 			if [ "$found" == "$hidden" ]; then
 				#Stuff when
 				answer="xyz"
-				smoothOut "\tThe hidden file has been found!\n"\
+				smoothOut "\t$(tput setaf 1)The hidden file has been found!$(tput setaf 9)\n"\
 "This means that the home is corrupt and should be deleted.\n"\
 "Delete the user $i? ('yes' or 'no')"
 				read answer
@@ -140,7 +140,7 @@ function removeHome {
 	done
 
 	answer="xyz"
-	smoothOut "\tNo other instance of the hidden file has been found.\n"\
+	smoothOut "\t$(tput setaf 6)No other instance of the hidden file has been found.$(tput setaf 9)\n"\
 "Would you like to manually delete a user from the computer? ('yes' or 'no')"
 	read answer
 	while [ "$answer" != "yes" ] && [ "$answer" != "no" ]; do
@@ -211,7 +211,7 @@ function checklogin()
 	for name in ${curUsers[@]}
 	do
 		if [ $name != "root" ] && [ $name != "admin" ]; then
-			echo "$name is currently logged in. Are you sure you want to continue?"
+			echo "$(tput setaf 1)$name is currently logged in. Are you sure you want to continue?$(tput setaf 9)"
 			read answer
 			while [ "$answer" != "yes" ] && [ "$answer" != "no" ]; do
 				smoothOut "Please choose only 'yes' or 'no' as the answer."

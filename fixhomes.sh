@@ -63,7 +63,7 @@ function removeHome {
 			if [ "$found" == "$hidden" ]; then
 				#Stuff when
 				answer="xyz"
-				smoothOut "\tThe hidden file has been found!\n"\
+				smoothOut "\t$(tput setaf 1)The hidden file has been found!$(tput setaf 9)\n"\
 "This means that the home is corrupt and should be deleted.\n"\
 "Delete the user $i? ('yes' or 'no')"
 				read answer
@@ -116,7 +116,7 @@ function removeHome {
 	done
 
 	answer="xyz"
-	smoothOut "\tNo other instance of the hidden file has been found.\n"\
+	smoothOut "\t$(tput setaf 6)No other instance of the hidden file has been found.$(tput setaf 9)\n"\
 "Would you like to manually delete a user from the computer? ('yes' or 'no')"
 	read answer
 	while [ "$answer" != "yes" ] && [ "$answer" != "no" ]; do

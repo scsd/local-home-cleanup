@@ -221,14 +221,16 @@ function checklogin()
 				exit 1
 			fi
 		fi
-	done	
+	done
+	#If it does not exit, run the main function
+	removeHome
 }
 
 #Create a while loop to go through each ip that was specified. Use 'x' as the looping variable!
 for (( x=$begin;x<=$ending;x++ ))
 do
 	smoothOut "Now connecting to $ipBase.$x, please wait..."
-	ssh -t -o ConnectTimeout=7 root@$ipBase.$x "$(typeset -f); hidden='.badhome'; checklogin; removeHome"
+	ssh -t -o ConnectTimeout=7 root@$ipBase.$x "$(typeset -f); hidden='.badhome'; checklogin"
 	smoothOut "\n"
 done
 

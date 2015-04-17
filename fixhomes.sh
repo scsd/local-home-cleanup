@@ -214,10 +214,10 @@ function checklogin()
 			echo "$(tput setaf 1)$name is currently logged in. Are you sure you want to continue?$(tput setaf 9)"
 			read answer
 			while [ "$answer" != "yes" ] && [ "$answer" != "no" ]; do
-				smoothOut "Please choose only 'yes' or 'no' as the answer."
+				echo "Please choose only 'yes' or 'no' as the answer."
 				read answer
 			done
-			if [[ $answer == "yes" ]]; then
+			if [[ $answer == "no" ]]; then
 				exit 1
 			fi
 		fi

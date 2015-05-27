@@ -87,7 +87,7 @@ function removeHome {
 			if [ "$found" == "$hidden" ]; then
 				#Stuff when
 				answer="xyz"
-				smoothOut "\t$(tput setaf 1)The hidden file has been found!$(tput setaf 9)\n"\
+				smoothOut "\t\[\e[0;91m\]The hidden file has been found!\[\e[0;97m\]\n"\
 "This means that the home is corrupt and should be deleted.\n"\
 "Delete the user $i? ('yes' or 'no')"
 				read answer
@@ -109,14 +109,14 @@ function removeHome {
 					if [ "$answer" == "yes" ]; then
 						smoothOut "Backing up files..."
 						curdate=`date "+%Y-%m-%d"`
-						checkbackup=`ls /Users | grep "$i".bak."$curdate"`
-						if [ -z "$checkbackup" ]; then
+						checkbackup=/Users/"$i".bak."$curdate"
+						if [ -e "$checkbackup" ]; then
 							rm /Users/"$i"/"$hidden"
 							mv /Users/"$i" /Users/"$i".bak."$curdate"
 						else
 							smoothOut "Backup from today already found, adding a zero to the name..."
-							checkbackup=`ls /Users | grep "$i".bak."$curdate".0`
-							if [ -z "$checkbackup" ]; then
+							checkbackup=/Users/"$i".bak."$curdate".0
+							if [ -e "$checkbackup" ]; then
 								smoothOut "Backup with 0 at the end already found, deleting..."
 								rm -rf /Users/"$i".bak."$curdate".0
 							fi
@@ -140,7 +140,7 @@ function removeHome {
 	done
 
 	answer="xyz"
-	smoothOut "\t$(tput setaf 6)No other instance of the hidden file has been found.$(tput setaf 9)\n"\
+	smoothOut "\t\[\e[0;32m\]No other instance of the hidden file has been found.\[\e[0;97m\]\n"\
 "Would you like to manually delete a user from the computer? ('yes' or 'no')"
 	read answer
 	while [ "$answer" != "yes" ] && [ "$answer" != "no" ]; do
@@ -165,13 +165,13 @@ function removeHome {
 		if [ "$answer" == "yes" ]; then
 			smoothOut "Backing up files..."
 			curdate=`date "+%Y-%m-%d"`
-			checkbackup=`ls /Users | grep "$usr".bak."$curdate"`
-			if [ -z "$checkbackup" ]; then
+			checkbackup=/Users/"$usr".bak."$curdate"
+			if [ -e "$checkbackup" ]; then
 				mv /Users/"$i" /Users/"$usr".bak."$curdate"
 			else
 				smoothOut "Backup from today already found, adding a zero to the name..."
-				checkbackup=`ls /Users | grep "$usr".bak."$curdate".0`
-				if [ -z "$checkbackup" ]; then
+				checkbackup=/Users/"$usr".bak."$curdate".0`
+				if [ -e "$checkbackup" ]; then
 					smoothOut "Backup with 0 at the end already found, deleting..."
 					rm -rf /Users/"$usr".bak."$curdate".0
 				fi
@@ -211,7 +211,7 @@ function checklogin()
 	for name in ${curUsers[@]}
 	do
 		if [ $name != "root" ] && [ $name != "admin" ]; then
-			echo "$(tput setaf 1)$name is currently logged in. Are you sure you want to continue?$(tput setaf 9)"
+			echo "\[\e[0;91m\]$name is currently logged in. Are you sure you want to continue?\[\e[0;97m\]"
 			read answer
 			while [ "$answer" != "yes" ] && [ "$answer" != "no" ]; do
 				echo "Please choose only 'yes' or 'no' as the answer."
